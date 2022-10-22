@@ -3,7 +3,7 @@
 
 def text(message):
     user_input = input(message)
-    if isinstance(user_input,str)
+    if isinstance(user_input,str):
         return user_input
 
 def number(message):
