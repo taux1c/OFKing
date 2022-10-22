@@ -3,12 +3,12 @@
 
 def text(message):
     user_input = input(message)
-    if type(user_input) == str:
+    if isinstance(user_input,str)
         return user_input
 
 def number(message):
     user_input = input(message)
-    if type(user_input) == int:
+    if isinstance(user_input,int):
         return user_input
     else:
         try:
