@@ -10,14 +10,15 @@ downloads = {}
 loop_open = True
 async def open_download_loop():
     while loop_open:
-        for k,v in downloads.items():
-            url = k
-            path = v
-            async with AsyncClient(headers = headers) as client:
-                r = await client.get(url)
-                with open(path, 'wb') as f:
-                    f.write(r.content)
-            del downloads[url]
+        if len(downloads) > 0:
+            for k,v in downloads.items():
+                url = k
+                path = v
+                async with AsyncClient(headers = headers) as client:
+                    r = await client.get(url)
+                    with open(path, 'wb') as f:
+                        f.write(r.content)
+                del downloads[url]
 
 def add_download(**kwargs):
     if loop_open:
@@ -37,4 +38,8 @@ def start_download_loop():
     loop_open = True
     with ProcessPoolExecutor() as executor:
         executor.submit(asyncio.run, open_download_loop())
-
+# The add_multiple_downloads function expects a list of dictionaries.
+# Each dictionary should have url as the key and path as the value.
+def add_multiple_downloads(downloads):
+    for download in downloads:
+        downloads.update({k,v for k,v in download.items()})
