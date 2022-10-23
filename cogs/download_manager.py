@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 import asyncio
 from cogs.json_manager import headers
-
+from concurrent.futures import ProcessPoolExecutor
 
 
 # This is a dictionary to hold the url and path for a download.
@@ -20,5 +20,20 @@ async def open_download_loop():
             del downloads[url]
 
 def add_download(**kwargs):
-    downloads.update({kwargs['url']:kwargs['path']})
+    if loop_open:
+        downloads.update({kwargs['url']:kwargs['path']})
+    else:
+        start_download_loop()
+        if loop_open:
+            downloads.update({kwargs['url']:kwargs['path']})
+        else:
+            raise Exception('Download loop failed to start.')
+
+
+def close_download_loop():
+    loop_open = False
+
+def start_download_loop():
+    with ProcessPoolExecutor() as executor:
+        executor.submit(asyncio.run, open_download_loop())
 
