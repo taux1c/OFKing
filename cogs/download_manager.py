@@ -34,6 +34,7 @@ def close_download_loop():
     loop_open = False
 
 def start_download_loop():
+    loop_open = True
     with ProcessPoolExecutor() as executor:
         executor.submit(asyncio.run, open_download_loop())
 
